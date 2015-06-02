@@ -89,3 +89,31 @@ function fx_login_nf_php_ver_notice(){
 	</div>
 <?php
 }
+
+
+
+/* AutoHosted Updater
+------------------------------------------ */
+
+/* hook updater to init */
+add_action( 'init', 'fx_login_nf_updater_init' );
+
+/**
+ * Load and Activate Plugin Updater Class.
+ * @since 0.1.0
+ */
+function fx_login_nf_updater_init() {
+
+	/* Load Plugin Updater */
+	require_once( trailingslashit( plugin_dir_path( __FILE__ ) ) . 'includes/plugin-updater.php' );
+
+	/* Updater Config */
+	$config = array(
+		'base'      => plugin_basename( __FILE__ ), //required
+		'repo_uri'  => 'http://repo.shellcreeper.com/',  //required
+		'repo_slug' => 'fx-login-notification',  //required
+	);
+
+	/* Load Updater Class */
+	new fx_Login_Nf_Plugin_Updater( $config );
+}
