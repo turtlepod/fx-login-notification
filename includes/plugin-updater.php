@@ -76,11 +76,6 @@ class fx_Login_Nf_Plugin_Updater{
 
 				/* forder name fix */
 				add_filter( 'upgrader_post_install', array( &$this, 'upgrader_post_install' ), 10, 3 );
-
-				/* add dashboard widget for activation key */
-				if ( true === $this->config['dashboard'] ){
-					add_action( 'wp_dashboard_setup', array( &$this, 'add_dashboard_widget' ) );
-				}
 			}
 		}
 	}
@@ -377,7 +372,7 @@ class fx_Login_Nf_Plugin_Updater{
 
 			/* If error on retriving the data from repo */
 			if ( is_wp_error( $request ) ) {
-				$res = new WP_Error( 'plugins_api_failed', '<p>' . __( 'An Unexpected HTTP Error occurred during the API request.', 'text-domain' ) . '</p><p><a href="?" onclick="document.location.reload(); return false;">' . __( 'Try again', 'text-domain' ) . '</a></p>', $request->get_error_message() );
+				$res = new WP_Error( 'plugins_api_failed', '<p>' . __( 'An Unexpected HTTP Error occurred during the API request.', 'fx-login-notification' ) . '</p><p><a href="?" onclick="document.location.reload(); return false;">' . __( 'Try again', 'fx-login-notification' ) . '</a></p>', $request->get_error_message() );
 			}
 
 			/* If no error, construct the data */
@@ -418,7 +413,7 @@ class fx_Login_Nf_Plugin_Updater{
 
 				/* If data is empty or not an object */
 				else{
-					$res = new WP_Error( 'plugins_api_failed', __( 'An unknown error occurred', 'text-domain' ), wp_remote_retrieve_body( $request ) );
+					$res = new WP_Error( 'plugins_api_failed', __( 'An unknown error occurred', 'fx-login-notification' ), wp_remote_retrieve_body( $request ) );
 				
 				}
 			}
@@ -454,206 +449,12 @@ class fx_Login_Nf_Plugin_Updater{
 				$activate = activate_plugin( trailingslashit( WP_PLUGIN_DIR ) . $plugin_base );
 
 				/* Update message */
-				$fail = __( 'The plugin has been updated, but could not be reactivated. Please reactivate it manually.', 'text-domain' );
-				$success = __( 'Plugin reactivated successfully. ', 'text-domain' );
+				$fail = __( 'The plugin has been updated, but could not be reactivated. Please reactivate it manually.', 'fx-login-notification' );
+				$success = __( 'Plugin reactivated successfully. ', 'fx-login-notification' );
 				echo is_wp_error( $activate ) ? $fail : $success;
 			}
 		}
 		return $result;
 	}
 
-
-	/**
-	 * Add Dashboard Widget
-	 * 
-	 * @since 0.1.0
-	 */
-	public function add_dashboard_widget() {
-
-		/* Get needed data */
-		$updater_data = $this->updater_data();
-
-		/* Widget ID, prefix with "ahp_" to make sure it's unique */
-		$widget_id = 'ahp_' . $updater_data['slug'] . '_activation_key';
-
-		/* Widget name */
-		$widget_name = $updater_data['name'] . __( ' Plugin Updates', 'text-domain' );
-
-		/* role check, in default install only administrator have this cap */
-		if ( current_user_can( 'update_plugins' ) ) {
-
-			/* add dashboard widget for acivation key */
-			wp_add_dashboard_widget( $widget_id, $widget_name, array( &$this, 'dashboard_widget_callback' ), array( &$this, 'dashboard_widget_control_callback' ) );
-		}
-	
-	}
-
-
-	/**
-	 * Dashboard Widget Callback
-	 * 
-	 * @since 0.1.0
-	 */
-	public function dashboard_widget_callback() {
-
-		/* Get needed data */
-		$updater_data = $this->updater_data();
-
-		/* Widget ID, prefix with "ahp_" to make sure it's unique */
-		$widget_id = 'ahp_' . $updater_data['slug'] . '_activation_key';
-
-		/* edit widget url */
-		$edit_url = 'index.php?edit=' . $widget_id . '#' . $widget_id;
-
-		/* get activation key from database */
-		$widget_option = get_option( $widget_id );
-
-		/* if activation key available/set */
-		if ( !empty( $widget_option ) && is_array( $widget_option ) ){
-
-			/* members only update */
-			if ( true === $updater_data['role'] ){
-
-				/* username */
-				$username = isset( $widget_option['username'] ) ? $widget_option['username'] : '';
-				echo '<p>'. __( 'Username: ', 'text-domain' ) . '<code>' . $username . '</code></p>';
-
-				/* activation key input */
-				$key = isset( $widget_option['key'] ) ? $widget_option['key'] : '' ;
-				echo '<p>'. __( 'Email: ', 'text-domain' ) . '<code>' . $key . '</code></p>';
-			}
-			else{
-
-				/* activation key input */
-				$key = isset( $widget_option['key'] ) ? $widget_option['key'] : '' ;
-				echo '<p>'. __( 'Key: ', 'text-domain' ) . '<code>' . $key . '</code></p>';
-			}
-
-
-			/* if key status is valid */
-			if ( $widget_option['status'] == 'valid' ){
-				_e( '<p>Your plugin update is <span style="color:green">active</span></p>', 'text-domain' );
-			}
-			/* if key is not valid */
-			elseif( $widget_option['status'] == 'invalid' ){
-				_e( '<p>Your input is <span style="color:red">not valid</span>, automatic updates is <span style="color:red">not active</span>.</p>', 'text-domain' );
-				echo '<p><a href="' . $edit_url . '" class="button-primary">' . __( 'Edit Key', 'text-domain' ) . '</a></p>';
-			}
-			/* else */
-			else{
-				_e( '<p>Unable to validate update activation.</p>', 'text-domain' );
-				echo '<p><a href="' . $edit_url . '" class="button-primary">' . __( 'Try again', 'text-domain' ) . '</a></p>';
-			}
-		}
-		/* if activation key is not yet set/empty */
-		else{
-			echo '<p><a href="' . $edit_url . '" class="button-primary">' . __( 'Add Key', 'text-domain' ) . '</a></p>';
-		}
-	}
-
-
-	/**
-	 * Dashboard Widget Control Callback
-	 * 
-	 * @since 0.1.0
-	 */
-	public function dashboard_widget_control_callback() {
-
-		/* Get needed data */
-		$updater_data = $this->updater_data();
-
-		/* Widget ID, prefix with "ahp_" to make sure it's unique */
-		$widget_id = 'ahp_' . $updater_data['slug'] . '_activation_key';
-
-		/* check options is set before saving */
-		if ( isset( $_POST[$widget_id] ) && isset( $_POST['dashboard-widget-nonce'] ) && wp_verify_nonce( $_POST['dashboard-widget-nonce'], 'edit-dashboard-widget_' . $widget_id ) ){
-
-			/* get submitted data */
-			$submit_data = $_POST[$widget_id];
-
-			/* username submitted */
-			$username = isset( $submit_data['username'] ) ? strip_tags( trim( $submit_data['username'] ) ) : '' ;
-
-			/* key submitted */
-			$key = isset( $submit_data['key'] ) ? strip_tags( trim( $submit_data['key'] ) ) : '' ;
-
-			/* get wp version */
-			global $wp_version;
-
-			/* get current domain */
-			$domain = $updater_data['domain'];
-
-			/* Get data from server */
-			$remote_url = add_query_arg( array( 'plugin_repo' => $updater_data['repo_slug'], 'ahr_check_key' => 'validate_key' ), $updater_data['repo_uri'] );
-			$remote_request = array( 'timeout' => 20, 'body' => array( 'key' => md5( $key ), 'login' => $username, 'autohosted' => $updater_data['autohosted'] ), 'user-agent' => 'WordPress/' . $wp_version . '; ' . $updater_data['domain'] );
-			$raw_response = wp_remote_post( $remote_url, $remote_request );
-
-			/* get response */
-			$response = '';
-			if ( !is_wp_error( $raw_response ) && ( $raw_response['response']['code'] == 200 ) )
-				$response = trim( wp_remote_retrieve_body( $raw_response ) );
-
-			/* if call to server sucess */
-			if ( !empty( $response ) ){
-
-				/* if key is valid */
-				if ( $response == 'valid' ) $valid = 'valid';
-
-				/* if key is not valid */
-				elseif ( $response == 'invalid' ) $valid = 'invalid';
-
-				/* if response is value is not recognized */
-				else $valid = 'unrecognized';
-			}
-			/* if response is empty or error */
-			else{
-				$valid = 'error';
-			}
-
-			/* database input */
-			$input = array(
-				'username' => $username,
-				'key' => $key,
-				'status' => $valid,
-			);
-
-			/* save value */
-			update_option( $widget_id, $input );
-		}
-
-		/* get activation key from database */
-		$widget_option = get_option( $widget_id );
-
-		/* default key, if it's not set yet */
-		$username_option = isset( $widget_option['username'] ) ? $widget_option['username'] : '' ;
-		$key_option = isset( $widget_option['key'] ) ? $widget_option['key'] : '' ;
-
-		/* display the form input for activation key */ ?>
-
-		<?php if ( true === $updater_data['role'] ) { // members only update ?>
-
-		<p>
-			<label for="<?php echo $widget_id; ?>-username"><?php _e( 'User name', 'text-domain' ); ?></label>
-		</p>
-		<p>
-			<input id="<?php echo $widget_id; ?>-username" name="<?php echo $widget_id; ?>[username]" type="text" value="<?php echo $username_option;?>"/>
-		</p>
-		<p>
-			<label for="<?php echo $widget_id; ?>-key"><?php _e( 'Email', 'text-domain' ); ?></label>
-		</p>
-		<p>
-			<input id="<?php echo $widget_id; ?>-key" class="regular-text" name="<?php echo $widget_id; ?>[key]" type="text" value="<?php echo $key_option;?>"/>
-		</p>
-
-		<?php } else { // activation keys ?>
-
-		<p>
-			<label for="<?php echo $widget_id; ?>-key"><?php _e( 'Activation Key', 'text-domain' ); ?></label>
-		</p>
-		<p>
-			<input id="<?php echo $widget_id; ?>-key" class="regular-text" name="<?php echo $widget_id; ?>[key]" type="text" value="<?php echo $key_option;?>"/>
-		</p>
-
-		<?php }
-	}
 }
