@@ -47,50 +47,18 @@ add_action( 'plugins_loaded', 'fx_login_nf_plugins_loaded' );
  */
 function fx_login_nf_plugins_loaded(){
 
-	/* Only load if PHP version support it. */
-	if ( version_compare( PHP_VERSION, '5.3.0' ) >= 0 ) {
+	/* Language */
+	load_plugin_textdomain( 'fx-login-notification', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
-		/* Language */
-		load_plugin_textdomain( 'fx-login-notification', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+	/* Load Functions */
+	require_once( FX_LOGIN_NF_PATH . 'includes/functions.php' );
 
-		/* Load Functions */
-		require_once( FX_LOGIN_NF_PATH . 'includes/functions.php' );
-
-		/* Load Settings */
-		if( is_admin() ){
-			require_once( FX_LOGIN_NF_PATH . 'includes/settings.php' );
-			$fx_login_nf_settings = new fx_Login_Nf_Settings();
-		}
-	}
-	/* PHP Version not supported, add notice. */
-	else{
-
-		/* Add admin error notice. */
-		if( is_admin() ){
-			add_action( 'admin_notices', 'fx_login_nf_php_ver_notice' );
-		}
-
+	/* Load Settings */
+	if( is_admin() ){
+		require_once( FX_LOGIN_NF_PATH . 'includes/settings.php' );
+		$fx_login_nf_settings = new fx_Login_Nf_Settings();
 	}
 }
-
-/**
- * Admin Notice if PHP version not supported
- * @since 0.1.0
- */
-function fx_login_nf_php_ver_notice(){
-?>
-	<div class="updated error">
-		<p><?php
-			printf(
-				_x( 'To use f(x) Login Notification Plugin your server must have at least PHP 5.3 installed (you have version %s).', 'admin notice', 'fx-login-notification' ),
-				PHP_VERSION
-			);
-			?></p>
-	</div>
-<?php
-}
-
-
 
 /* AutoHosted Updater
 ------------------------------------------ */
@@ -117,3 +85,4 @@ function fx_login_nf_updater_init() {
 	/* Load Updater Class */
 	new fx_Login_Nf_Plugin_Updater( $config );
 }
+

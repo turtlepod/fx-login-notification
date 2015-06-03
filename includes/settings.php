@@ -148,11 +148,7 @@ class fx_Login_Nf_Settings{
 		add_settings_section(
 			'fx_login_nf_admin_section', // section ID
 			_x( 'Site Administrator Notification', 'settings page', 'fx-login-notification' ), // section title
-			function(){
-
-				printf( _x( 'Notification will be sent to admin e-mail address. You can change admin e-mail address in <a href="%s">General Settings</a>.', 'settings page', 'fx-login-notification' ), esc_url( admin_url( 'options-general.php' ) ) );
-
-			}, // section callback function
+			array( $this, 'settings_section_cb' ), // section callback function
 			$this->settings_slug // settings page slug
 		);
 
@@ -160,11 +156,7 @@ class fx_Login_Nf_Settings{
 		add_settings_field(
 			'fx_login_nf_admin_enable', // field ID
 			_x( 'Admin Notification', 'settings page', 'fx-login-notification' ), // field title 
-			function(){
-			?>
-				<label for="fx_login_nf_admin_enable"><input type="checkbox" value="1" id="fx_login_nf_admin_enable" name="<?php echo esc_attr( $this->option_name . '[enable]' );?>" <?php checked( fx_login_nf_get_option( 'enable', true ) ); ?>> <?php _ex( 'Enable site admin notification.', 'settings page', 'fx-login-notification' );?></label>
-			<?php
-			}, // field callback function
+			array( $this, 'settings_field_enable_cb' ), // field callback function
 			$this->settings_slug, // settings page slug
 			'fx_login_nf_admin_section' // section ID
 		);
@@ -173,32 +165,7 @@ class fx_Login_Nf_Settings{
 		add_settings_field(
 			'fx_login_nf_admin_user_roles', // field ID
 			_x( 'Exclude User Roles', 'settings page', 'fx-login-notification' ), // field title 
-			function(){
-				?>
-
-				<label for="fx_login_nf_admin_exclude_roles"><input type="checkbox" value="1" id="fx_login_nf_admin_exclude_roles" name="<?php echo esc_attr( $this->option_name . '[exclude_roles]' );?>" <?php checked( fx_login_nf_get_option( 'exclude_roles', true ) ); ?>> <?php _ex( 'Enable exclude user roles feature.', 'settings page', 'fx-login-notification' );?></label><br/>
-
-				<p class="description"><?php _ex( 'If enabled, e-mail notification will be sent to administrator only if user log-in without selected role.<br />If disabled, e-mail notification will be sent to administrator for for all user log-in.', 'settings page', 'fx-login-notification' );?></p><br/>
-
-				<p><?php _ex( "Select user roles to exclude:", 'settings page', 'fx-login-notification' );?></p>
-				<?php
-				/* For each roles, create option */
-				$roles = fx_login_nf_user_roles();
-				foreach( $roles as $role_id => $role_name ){
-					$option_name = $this->option_name . '[roles][]';
-					$id = 'fx_login_nf_admin_user_roles_' . $role_id;
-					$roles_selected = fx_login_nf_get_option( 'roles',  array( 'subscriber' ) );
-					$checked = false;
-					if( is_array( $roles_selected ) && in_array( $role_id, $roles_selected ) ){
-						$checked = true;
-					}
-				?>
-					<label for="<?php echo esc_attr( $id ); ?>"><input type="checkbox" value="<?php echo esc_attr( $role_id );?>" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $option_name ); ?>" <?php checked( $checked ); ?>> <?php echo $role_name; ?></label><br />
-				<?php
-				}
-			?>
-			<?php
-			}, // field callback function
+			array( $this, 'settings_field_roles_cb' ), // field callback function
 			$this->settings_slug, // settings page slug
 			'fx_login_nf_admin_section' // section ID
 		);
@@ -207,38 +174,78 @@ class fx_Login_Nf_Settings{
 		add_settings_field(
 			'fx_login_nf_admin_email_template', // field ID
 			_x( 'E-mail Template', 'settings page', 'fx-login-notification' ), // field title 
-			function(){
-				$option_name = $this->option_name;
-			?>
-				<label for="admin_email_subject_template"><?php _ex( 'E-mail Subject', 'settings page', 'fx-login-notification' );?></label><br/>
-				<input style="max-width:100%;width:500px;" type="text" class="ltr" value="<?php echo esc_attr( fx_login_nf_get_option( 'email_subject', fx_login_nf_email_subject_default() ) ); ?>" id="admin_email_subject_template" name="<?php echo esc_attr( $option_name . '[email_subject]' ); ?>"><br/><br/>
-
-				<label for="admin_email_content_template"><?php _ex( 'E-mail Content', 'settings page', 'fx-login-notification' );?></label><br/>
-				<textarea id="admin_email_content_template" style="max-width:100%;width:500px;" cols="30" rows="12" name="<?php echo esc_attr( $option_name . '[email_content]' ); ?>"><?php echo esc_textarea( fx_login_nf_email_content_sanitize( fx_login_nf_get_option( 'email_content', fx_login_nf_email_content_default() ) ) );?></textarea>
-
-				<p class="description">
-					<?php $desc = _x(
-						'You can use tags below in e-mail subject and content:<br />' .
-						'<code>%site_name%</code> to display Website Name.<br />' .
-						'<code>%site_url%</code> to display Website URL.<br />' .
-						'<code>%current_time%</code> to display Current Date and Time.<br />' .
-						'<code>%http_user_agent%</code> to display HTTP User Agent.<br />' .
-						'<code>%http_referer%</code> to display HTTP Referer.<br />' .
-						'<code>%ip_address%</code> to display IP Address.<br />' .
-						'<code>%user_id%</code> to display User ID.<br />' .
-						'<code>%user_login%</code> to display User Login Name.<br />' .
-						'<code>%user_email%</code> to display User E-mail Address.<br />' .
-						'<code>%display_name%</code> to display User Display Name.<br />' .
-						'<code>%user_roles%</code> to display User Roles.<br />',
-						'email template setting description',
-						'fx-login-notification'
-					);?>
-					<?php print $desc; ?>
-				</p>
-			<?php
-			}, // field callback function
+			array( $this, 'settings_field_email_template_cb' ), // field callback function
 			$this->settings_slug, // settings page slug
 			'fx_login_nf_admin_section' // section ID
 		);
+	}
+
+
+	/**
+	 * Settings Section Callback
+	 * @since 0.1.0
+	 */
+	public function settings_section_cb(){
+		printf( _x( 'Notification will be sent to admin e-mail address. You can change admin e-mail address in <a href="%s">General Settings</a>.', 'settings page', 'fx-login-notification' ), esc_url( admin_url( 'options-general.php' ) ) );
+	}
+
+	/**
+	 * Settings Field Callback : Enable Admin Notification
+	 * @since 0.1.0
+	 */
+	public function settings_field_enable_cb(){
+	?>
+		<label for="fx_login_nf_admin_enable"><input type="checkbox" value="1" id="fx_login_nf_admin_enable" name="<?php echo esc_attr( $this->option_name . '[enable]' );?>" <?php checked( fx_login_nf_get_option( 'enable', true ) ); ?>> <?php _ex( 'Enable site admin notification.', 'settings page', 'fx-login-notification' );?></label>
+	<?php
+	}
+
+	/**
+	 * Settings Field Callback : Roles Options
+	 * @since 0.1.0
+	 */
+	public function settings_field_roles_cb(){
+	?>
+
+		<label for="fx_login_nf_admin_exclude_roles"><input type="checkbox" value="1" id="fx_login_nf_admin_exclude_roles" name="<?php echo esc_attr( $this->option_name . '[exclude_roles]' );?>" <?php checked( fx_login_nf_get_option( 'exclude_roles', true ) ); ?>> <?php _ex( 'Enable exclude user roles feature.', 'settings page', 'fx-login-notification' );?></label><br/>
+
+		<p class="description"><?php _ex( 'If enabled, e-mail notification will be sent to administrator only if user log-in without selected role.<br />If disabled, e-mail notification will be sent to administrator for for all user log-in.', 'settings page', 'fx-login-notification' );?></p><br/>
+
+		<p><?php _ex( "Select user roles to exclude:", 'settings page', 'fx-login-notification' );?></p>
+
+		<?php
+		/* For each roles, create option */
+		$roles = fx_login_nf_user_roles();
+		foreach( $roles as $role_id => $role_name ){
+			$option_name = $this->option_name . '[roles][]';
+			$id = 'fx_login_nf_admin_user_roles_' . $role_id;
+			$roles_selected = fx_login_nf_get_option( 'roles',  array( 'subscriber' ) );
+			$checked = false;
+			if( is_array( $roles_selected ) && in_array( $role_id, $roles_selected ) ){
+				$checked = true;
+			}
+		?>
+				<label for="<?php echo esc_attr( $id ); ?>"><input type="checkbox" value="<?php echo esc_attr( $role_id );?>" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $option_name ); ?>" <?php checked( $checked ); ?>> <?php echo $role_name; ?></label><br />
+		<?php } //end foreach ?>
+
+	<?php
+	}
+
+	/**
+	 * Settings Field Callback : E-mail Template
+	 * @since 0.1.0
+	 */
+	public function settings_field_email_template_cb(){
+		$option_name = $this->option_name;
+	?>
+		<label for="admin_email_subject_template"><?php _ex( 'E-mail Subject', 'settings page', 'fx-login-notification' );?></label><br/>
+		<input style="max-width:100%;width:500px;" type="text" class="ltr" value="<?php echo esc_attr( fx_login_nf_get_option( 'email_subject', fx_login_nf_email_subject_default() ) ); ?>" id="admin_email_subject_template" name="<?php echo esc_attr( $option_name . '[email_subject]' ); ?>"><br/><br/>
+
+		<label for="admin_email_content_template"><?php _ex( 'E-mail Content', 'settings page', 'fx-login-notification' );?></label><br/>
+		<textarea id="admin_email_content_template" style="max-width:100%;width:500px;" cols="30" rows="12" name="<?php echo esc_attr( $option_name . '[email_content]' ); ?>"><?php echo esc_textarea( fx_login_nf_email_content_sanitize( fx_login_nf_get_option( 'email_content', fx_login_nf_email_content_default() ) ) );?></textarea>
+
+		<p class="description">
+			<?php echo fx_login_nf_email_template_note(); ?>
+		</p>
+	<?php
 	}
 }

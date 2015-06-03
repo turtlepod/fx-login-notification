@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: f(x) Login Notification\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-02 17:49+0700\n"
+"POT-Creation-Date: 2015-06-03 14:27+0700\n"
 "PO-Revision-Date: \n"
 "Last-Translator: David Chandra Purnama <david@shellcreeper.com>\n"
 "Language-Team: David Chandra P <david@shellcreeper.com>\n"
@@ -15,14 +15,6 @@ msgstr ""
 "X-Poedit-Basepath: ../\n"
 "X-Generator: Poedit 1.5.7\n"
 "X-Poedit-SearchPath-0: .\n"
-
-#: fx-login-notification.php:85
-#, php-format
-msgctxt "admin notice"
-msgid ""
-"To use f(x) Login Notification Plugin your server must have at least PHP 5.3 "
-"installed (you have version %s)."
-msgstr ""
 
 #: includes/functions.php:91
 msgctxt "email content default template"
@@ -46,7 +38,22 @@ msgid ""
 "- Sent by f(x) Login Notification Plugin\n"
 msgstr ""
 
-#: includes/functions.php:229
+#: includes/functions.php:130
+msgctxt "email template setting description"
+msgid ""
+"You can use tags below in e-mail subject and content:<br /><code>%site_name"
+"%</code> to display Website Name.<br /><code>%site_url%</code> to display "
+"Website URL.<br /><code>%current_time%</code> to display Current Date and "
+"Time.<br /><code>%http_user_agent%</code> to display HTTP User Agent.<br /"
+"><code>%http_referer%</code> to display HTTP Referer.<br /><code>%ip_address"
+"%</code> to display IP Address.<br /><code>%user_id%</code> to display User "
+"ID.<br /><code>%user_login%</code> to display User Login Name.<br /><code>"
+"%user_email%</code> to display User E-mail Address.<br /><code>%display_name"
+"%</code> to display User Display Name.<br /><code>%user_roles%</code> to "
+"display User Roles.<br />"
+msgstr ""
+
+#: includes/functions.php:254
 #, php-format
 msgctxt "email from name"
 msgid "%1$s Notification"
@@ -89,40 +96,25 @@ msgctxt "settings page"
 msgid "Site Administrator Notification"
 msgstr ""
 
-#: includes/settings.php:153
+#: includes/settings.php:158
+msgctxt "settings page"
+msgid "Admin Notification"
+msgstr ""
+
+#: includes/settings.php:167
+msgctxt "settings page"
+msgid "Exclude User Roles"
+msgstr ""
+
+#: includes/settings.php:176
+msgctxt "settings page"
+msgid "E-mail Template"
+msgstr ""
+
+#: includes/settings.php:189
 #, php-format
 msgctxt "settings page"
 msgid ""
 "Notification will be sent to admin e-mail address. You can change admin e-"
 "mail address in <a href=\"%s\">General Settings</a>."
-msgstr ""
-
-#: includes/settings.php:162
-msgctxt "settings page"
-msgid "Admin Notification"
-msgstr ""
-
-#: includes/settings.php:175
-msgctxt "settings page"
-msgid "Exclude User Roles"
-msgstr ""
-
-#: includes/settings.php:209
-msgctxt "settings page"
-msgid "E-mail Template"
-msgstr ""
-
-#: includes/settings.php:221
-msgctxt "email template setting description"
-msgid ""
-"You can use tags below in e-mail subject and content:<br /><code>%site_name"
-"%</code> to display Website Name.<br /><code>%site_url%</code> to display "
-"Website URL.<br /><code>%current_time%</code> to display Current Date and "
-"Time.<br /><code>%http_user_agent%</code> to display HTTP User Agent.<br /"
-"><code>%http_referer%</code> to display HTTP Referer.<br /><code>%ip_address"
-"%</code> to display IP Address.<br /><code>%user_id%</code> to display User "
-"ID.<br /><code>%user_login%</code> to display User Login Name.<br /><code>"
-"%user_email%</code> to display User E-mail Address.<br /><code>%display_name"
-"%</code> to display User Display Name.<br /><code>%user_roles%</code> to "
-"display User Roles.<br />"
 msgstr ""

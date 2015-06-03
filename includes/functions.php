@@ -121,6 +121,31 @@ function fx_login_nf_email_content_default(){
 }
 
 /**
+ * Email Template Tags
+ * Display available template tags for e-mail subject and content.
+ * @since 0.1.0
+ */
+function fx_login_nf_email_template_note(){
+	$note = _x(
+		'You can use tags below in e-mail subject and content:<br />' .
+		'<code>%site_name%</code> to display Website Name.<br />' .
+		'<code>%site_url%</code> to display Website URL.<br />' .
+		'<code>%current_time%</code> to display Current Date and Time.<br />' .
+		'<code>%http_user_agent%</code> to display HTTP User Agent.<br />' .
+		'<code>%http_referer%</code> to display HTTP Referer.<br />' .
+		'<code>%ip_address%</code> to display IP Address.<br />' .
+		'<code>%user_id%</code> to display User ID.<br />' .
+		'<code>%user_login%</code> to display User Login Name.<br />' .
+		'<code>%user_email%</code> to display User E-mail Address.<br />' .
+		'<code>%display_name%</code> to display User Display Name.<br />' .
+		'<code>%user_roles%</code> to display User Roles.<br />',
+		'email template setting description',
+		'fx-login-notification'
+	);
+	return apply_filters( 'fx_login_nf_email_template_note', $note );
+}
+
+/**
  * Parse Email Template
  * @since 0.1.0
  */
@@ -148,7 +173,7 @@ function fx_login_nf_parse_template( $data , $user = '' ){
 	/* Other data */
 	$data = str_replace( '%current_time%', date_i18n( 'Y-m-d H:i:s' ), $data );
 
-	return $data;
+	return apply_filters( 'fx_login_nf_parse_template', $data );
 }
 
 /**
