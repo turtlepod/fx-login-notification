@@ -208,7 +208,7 @@ class fx_Login_Nf_Settings{
 
 		<label for="fx_login_nf_admin_exclude_roles"><input type="checkbox" value="1" id="fx_login_nf_admin_exclude_roles" name="<?php echo esc_attr( $this->option_name . '[exclude_roles]' );?>" <?php checked( fx_login_nf_get_option( 'exclude_roles', true ) ); ?>> <?php _ex( 'Enable exclude user roles feature.', 'settings page', 'fx-login-notification' );?></label><br/>
 
-		<p class="description"><?php _ex( 'If enabled, e-mail notification will be sent to administrator only if user log-in without selected role.<br />If disabled, e-mail notification will be sent to administrator for for all user log-in.', 'settings page', 'fx-login-notification' );?></p><br/>
+		<p class="description"><?php _ex( 'If enabled, an e-mail notification will be sent only if the log-in does not have the following roles.<br />If disabled, the notification will be sent after every login.', 'settings page', 'fx-login-notification' );?></p><br/>
 
 		<p><?php _ex( "Select user roles to exclude:", 'settings page', 'fx-login-notification' );?></p>
 
