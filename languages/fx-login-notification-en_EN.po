@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: f(x) Login Notification\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-03 14:27+0700\n"
+"POT-Creation-Date: 2015-06-04 09:30+0700\n"
 "PO-Revision-Date: \n"
 "Last-Translator: David Chandra Purnama <david@shellcreeper.com>\n"
 "Language-Team: David Chandra P <david@shellcreeper.com>\n"
@@ -111,10 +111,11 @@ msgctxt "settings page"
 msgid "E-mail Template"
 msgstr ""
 
-#: includes/settings.php:189
+#: includes/settings.php:191
 #, php-format
 msgctxt "settings page"
 msgid ""
-"Notification will be sent to admin e-mail address. You can change admin e-"
-"mail address in <a href=\"%s\">General Settings</a>."
+"Notification will be sent to admin e-mail address when someone logs in "
+"successfully.<br/>You can change admin e-mail address in <a href=\"%s"
+"\">General Settings</a>."
 msgstr ""
