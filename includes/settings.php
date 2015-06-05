@@ -105,6 +105,7 @@ class fx_Login_Nf_Settings{
 		$new_data['exclude_roles'] = isset( $data['exclude_roles'] ) ? true : false ;
 
 		/* If no role data is set, set as empty array */
+		$new_data['roles'] = array();
 		if( isset( $data['roles'] ) && is_array( $data['roles'] ) ){
 			$roles = array();
 			foreach( $data['roles'] as $roles_data ){
@@ -113,9 +114,6 @@ class fx_Login_Nf_Settings{
 				}
 			}
 			$new_data['roles'] = $roles;
-		}
-		else{
-			$new_data['roles'] = array();
 		}
 
 		/* E-mail Title Template */
@@ -188,7 +186,9 @@ class fx_Login_Nf_Settings{
 	?>
 		<label for="fx_login_nf_admin_enable"><input type="checkbox" value="1" id="fx_login_nf_admin_enable" name="<?php echo esc_attr( $this->option_name . '[enable]' );?>" <?php checked( fx_login_nf_get_option( 'enable', true ) ); ?>> <?php _ex( 'Enable site admin notification.', 'settings page', 'fx-login-notification' );?></label>
 
-		<p class="description"><?php printf( _x( 'Notification will be sent to admin e-mail address when someone logs in successfully.<br/>You can change admin e-mail address in <a href="%s">General Settings</a>.', 'settings page', 'fx-login-notification' ), esc_url( admin_url( 'options-general.php' ) ) );?></p>
+		<p class="description">
+			<?php printf( _x( 'Notification will be sent to admin e-mail address when someone logs in successfully.<br />Your admin e-mail address is <a href="mailto:%1$s">%1$s</a>.<br/>You can change admin e-mail address in <a href="%2$s">General Settings</a>.', 'settings page', 'fx-login-notification' ), get_bloginfo( 'admin_email' ), esc_url( admin_url( 'options-general.php' ) ) );?><br />
+		</p>
 	<?php
 	}
 

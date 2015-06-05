@@ -3,7 +3,7 @@
  * Plugin Name: f(x) Login Notification
  * Plugin URI: http://fx-plugins.com/plugins/fx-login-notification/
  * Description: Simple plugin for user login notification via email.
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: David Chandra Purnama
  * Author URI: http://shellcreeper.com/
  *

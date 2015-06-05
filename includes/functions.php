@@ -102,9 +102,9 @@ function fx_login_nf_email_subject_default(){
 function fx_login_nf_email_content_default(){
 
 	$content = _x(
-		'Hello a user has logged in on the website %site_name% (%site_url%).' . "\n" .
+		'Hello, a user has logged in on your website %site_name% (%site_url%).' . "\n" .
 		'Here are the details of this access:' . "\n\n" .
-		'Login Date & Time: %current_time%' . "\n" .
+		'Login Time: %current_time%' . "\n" .
 		'User Login (ID): %user_login% (%user_id%)' . "\n" .
 		'User Email: %user_email%' . "\n" .
 		'User Roles: %user_roles%' . "\n" .
@@ -156,9 +156,10 @@ function fx_login_nf_parse_template( $data , $user = '' ){
 	$data = str_replace( '%site_url%', get_bloginfo( 'wpurl' ), $data );
 
 	/* HTTP data */
-	$data = str_replace( '%http_user_agent%', ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? esc_html( $_SERVER['HTTP_USER_AGENT'] ) : '' ), $data );
-	$data = str_replace( '%http_referer%', ( isset( $_SERVER['HTTP_REFERER'] ) ? esc_html( $_SERVER['HTTP_REFERER'] ) : '' ), $data );
+	$data = str_replace( '%http_user_agent%', ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? esc_html( $_SERVER['HTTP_USER_AGENT'] ) : 'N/A' ), $data );
+	$data = str_replace( '%http_referer%', ( isset( $_SERVER['HTTP_REFERER'] ) ? esc_html( $_SERVER['HTTP_REFERER'] ) : 'N/A' ), $data );
 	$data = str_replace( '%ip_address%', fx_login_nf_get_ip(), $data );
+	$data = str_replace( '%current_url%', fx_login_nf_get_url(), $data );
 
 	/* User data */
 	if( !empty( $user ) ){
@@ -177,7 +178,7 @@ function fx_login_nf_parse_template( $data , $user = '' ){
 }
 
 /**
- * Utillity: Get IP Address.
+ * Utility: Get IP Address.
  * @since 0.1.0
  */
 function fx_login_nf_get_ip(){
@@ -191,8 +192,19 @@ function fx_login_nf_get_ip(){
 	else{
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
-
 	return $ip;
+}
+
+/**
+ * Utility: Get Login URL
+ * %current_url% is not added in e-mail template note, but can be used if needed.
+ * the reason is wp-login.php is used in login mechanism, so technically this will only return to wp-login.php(?)
+ * @since 0.1.1
+ */
+function fx_login_nf_get_url(){
+	$url  = ( $_SERVER["HTTPS"] != 'on' ) ? 'http://'.$_SERVER["SERVER_NAME"] :  'https://'.$_SERVER["SERVER_NAME"];
+	$url .= $_SERVER["REQUEST_URI"];
+	return $url;
 }
 
 /* If user is logged in, send email */
@@ -211,11 +223,6 @@ function fx_login_nf_send_mail( $user_user_login, $user ) {
 
 	/* As default send email to all login instance */
 	$send_nf = true;
-
-	/* If notification disabled, set to false */
-	if( ! fx_login_nf_get_option( 'enable', true ) ){
-		$send_nf = false;
-	}
 
 	/* if exclude role enabled */
 	if( fx_login_nf_get_option( 'exclude_roles', true ) ){
@@ -236,6 +243,14 @@ function fx_login_nf_send_mail( $user_user_login, $user ) {
 			}
 		}
 	}
+
+	/* If notification disabled, set to false */
+	if( ! fx_login_nf_get_option( 'enable', true ) ){
+		$send_nf = false;
+	}
+
+	/* Before action hook */
+	do_action( 'fx_login_nf_before_send_mail', $user_user_login, $user, $send_nf );
 
 	/* only if it's true. */
 	if( true === $send_nf ){
@@ -270,6 +285,9 @@ function fx_login_nf_send_mail( $user_user_login, $user ) {
 		wp_mail( $admin_email, $email_subject, $body_message, $headers );
 
 	}
+
+	/* After action hook */
+	do_action( 'fx_login_nf_after_send_mail', $user_user_login, $user, $send_nf );
 }
 
 
