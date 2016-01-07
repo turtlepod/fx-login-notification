@@ -263,10 +263,11 @@ function fx_login_nf_send_mail( $user_user_login, $user ) {
 		if ( substr( $sitename, 0, 4 ) == 'www.' ) {
 			$sitename = substr( $sitename, 4 );
 		}
-		$from_email = 'noreply@' . $sitename;
+		$from_email = apply_filters( 'fx_login_nf_from_email', 'noreply@' . $sitename );
 
 		/* E-mail From Name */
 		$from_name = sprintf( _x( '%1$s Notification', 'email from name', 'fx-login-notification' ), $sitename );
+		$from_name = apply_filters( 'fx_login_nf_from_name', $from_name );
 
 		/* Headers */
 		$headers  = 'From: "' . $from_name . '" <' . $from_email . '>'. "\r\n";
@@ -289,5 +290,4 @@ function fx_login_nf_send_mail( $user_user_login, $user ) {
 	/* After action hook */
 	do_action( 'fx_login_nf_after_send_mail', $user_user_login, $user, $send_nf );
 }
-
 
