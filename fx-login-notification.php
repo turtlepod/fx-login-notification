@@ -26,7 +26,7 @@ if ( ! defined( 'WPINC' ) ) { die; }
 ------------------------------------------ */
 
 /* Set the version constant. */
-define( 'FX_LOGIN_NF_VERSION', '0.1.0' );
+define( 'FX_LOGIN_NF_VERSION', '1.0.0' );
 
 /* Set the constant path to the plugin path. */
 define( 'FX_LOGIN_NF_PATH', trailingslashit( plugin_dir_path( __FILE__ ) ) );
