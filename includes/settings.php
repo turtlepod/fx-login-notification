@@ -105,6 +105,7 @@ class fx_Login_Nf_Settings{
 		$new_data['exclude_roles'] = isset( $data['exclude_roles'] ) ? true : false ;
 
 		/* If no role data is set, set as empty array */
+		$new_data['roles'] = array();
 		if( isset( $data['roles'] ) && is_array( $data['roles'] ) ){
 			$roles = array();
 			foreach( $data['roles'] as $roles_data ){
@@ -113,9 +114,6 @@ class fx_Login_Nf_Settings{
 				}
 			}
 			$new_data['roles'] = $roles;
-		}
-		else{
-			$new_data['roles'] = array();
 		}
 
 		/* E-mail Title Template */
@@ -148,7 +146,7 @@ class fx_Login_Nf_Settings{
 		add_settings_section(
 			'fx_login_nf_admin_section', // section ID
 			_x( 'Site Administrator Notification', 'settings page', 'fx-login-notification' ), // section title
-			array( $this, 'settings_section_cb' ), // section callback function
+			'__return_false', // section callback function
 			$this->settings_slug // settings page slug
 		);
 
@@ -180,15 +178,6 @@ class fx_Login_Nf_Settings{
 		);
 	}
 
-
-	/**
-	 * Settings Section Callback
-	 * @since 0.1.0
-	 */
-	public function settings_section_cb(){
-		printf( _x( 'Notification will be sent to admin e-mail address. You can change admin e-mail address in <a href="%s">General Settings</a>.', 'settings page', 'fx-login-notification' ), esc_url( admin_url( 'options-general.php' ) ) );
-	}
-
 	/**
 	 * Settings Field Callback : Enable Admin Notification
 	 * @since 0.1.0
@@ -196,6 +185,10 @@ class fx_Login_Nf_Settings{
 	public function settings_field_enable_cb(){
 	?>
 		<label for="fx_login_nf_admin_enable"><input type="checkbox" value="1" id="fx_login_nf_admin_enable" name="<?php echo esc_attr( $this->option_name . '[enable]' );?>" <?php checked( fx_login_nf_get_option( 'enable', true ) ); ?>> <?php _ex( 'Enable site admin notification.', 'settings page', 'fx-login-notification' );?></label>
+
+		<p class="description">
+			<?php printf( _x( 'Notification will be sent to admin e-mail address when someone logs in successfully.<br />Your admin e-mail address is <a href="mailto:%1$s">%1$s</a>.<br/>You can change admin e-mail address in <a href="%2$s">General Settings</a>.', 'settings page', 'fx-login-notification' ), get_bloginfo( 'admin_email' ), esc_url( admin_url( 'options-general.php' ) ) );?><br />
+		</p>
 	<?php
 	}
 
@@ -208,7 +201,7 @@ class fx_Login_Nf_Settings{
 
 		<label for="fx_login_nf_admin_exclude_roles"><input type="checkbox" value="1" id="fx_login_nf_admin_exclude_roles" name="<?php echo esc_attr( $this->option_name . '[exclude_roles]' );?>" <?php checked( fx_login_nf_get_option( 'exclude_roles', true ) ); ?>> <?php _ex( 'Enable exclude user roles feature.', 'settings page', 'fx-login-notification' );?></label><br/>
 
-		<p class="description"><?php _ex( 'If enabled, e-mail notification will be sent to administrator only if user log-in without selected role.<br />If disabled, e-mail notification will be sent to administrator for for all user log-in.', 'settings page', 'fx-login-notification' );?></p><br/>
+		<p class="description"><?php _ex( 'If enabled, an e-mail notification will be sent only if the log-in user <em>does not</em> have the following roles.<br />If disabled, the notification will be sent for every user.', 'settings page', 'fx-login-notification' );?></p><br/>
 
 		<p><?php _ex( "Select user roles to exclude:", 'settings page', 'fx-login-notification' );?></p>
 

@@ -3,7 +3,7 @@
  * Plugin Name: f(x) Login Notification
  * Plugin URI: http://fx-plugins.com/plugins/fx-login-notification/
  * Description: Simple plugin for user login notification via email.
- * Version: 0.1.0
+ * Version: 1.0.0
  * Author: David Chandra Purnama
  * Author URI: http://shellcreeper.com/
  *
@@ -26,7 +26,7 @@ if ( ! defined( 'WPINC' ) ) { die; }
 ------------------------------------------ */
 
 /* Set the version constant. */
-define( 'FX_LOGIN_NF_VERSION', '0.1.0' );
+define( 'FX_LOGIN_NF_VERSION', '1.0.0' );
 
 /* Set the constant path to the plugin path. */
 define( 'FX_LOGIN_NF_PATH', trailingslashit( plugin_dir_path( __FILE__ ) ) );
@@ -59,30 +59,3 @@ function fx_login_nf_plugins_loaded(){
 		$fx_login_nf_settings = new fx_Login_Nf_Settings();
 	}
 }
-
-/* AutoHosted Updater
------------------------------------------- */
-
-/* hook updater to init */
-add_action( 'init', 'fx_login_nf_updater_init' );
-
-/**
- * Load and Activate Plugin Updater Class.
- * @since 0.1.0
- */
-function fx_login_nf_updater_init() {
-
-	/* Load Plugin Updater */
-	require_once( trailingslashit( plugin_dir_path( __FILE__ ) ) . 'includes/plugin-updater.php' );
-
-	/* Updater Config */
-	$config = array(
-		'base'      => plugin_basename( __FILE__ ), //required
-		'repo_uri'  => 'http://repo.shellcreeper.com/',  //required
-		'repo_slug' => 'fx-login-notification',  //required
-	);
-
-	/* Load Updater Class */
-	new fx_Login_Nf_Plugin_Updater( $config );
-}
-

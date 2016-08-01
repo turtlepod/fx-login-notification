@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: f(x) Login Notification\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-03 14:27+0700\n"
+"POT-Creation-Date: 2016-01-07 16:37+0700\n"
 "PO-Revision-Date: \n"
 "Last-Translator: David Chandra Purnama <david@shellcreeper.com>\n"
 "Language-Team: David Chandra P <david@shellcreeper.com>\n"
@@ -12,8 +12,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: _e;__;esc_attr_e;esc_attr__;esc_html_e;esc_html__;_x;"
 "_n;_x:1,2c;_n:1,2\n"
-"X-Poedit-Basepath: ../\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-Basepath: ..\n"
+"X-Generator: Poedit 1.8.6\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: includes/functions.php:91
@@ -24,10 +24,10 @@ msgstr ""
 #: includes/functions.php:105
 msgctxt "email content default template"
 msgid ""
-"Hello a user has logged in on the website %site_name% (%site_url%).\n"
+"Hello, a user has logged in on your website %site_name% (%site_url%).\n"
 "Here are the details of this access:\n"
 "\n"
-"Login Date & Time: %current_time%\n"
+"Login Time: %current_time%\n"
 "User Login (ID): %user_login% (%user_id%)\n"
 "User Email: %user_email%\n"
 "User Roles: %user_roles%\n"
@@ -53,32 +53,10 @@ msgid ""
 "display User Roles.<br />"
 msgstr ""
 
-#: includes/functions.php:254
+#: includes/functions.php:269
 #, php-format
 msgctxt "email from name"
 msgid "%1$s Notification"
-msgstr ""
-
-#: includes/plugin-updater.php:375
-msgid "An Unexpected HTTP Error occurred during the API request."
-msgstr ""
-
-#: includes/plugin-updater.php:375
-msgid "Try again"
-msgstr ""
-
-#: includes/plugin-updater.php:416
-msgid "An unknown error occurred"
-msgstr ""
-
-#: includes/plugin-updater.php:452
-msgid ""
-"The plugin has been updated, but could not be reactivated. Please reactivate "
-"it manually."
-msgstr ""
-
-#: includes/plugin-updater.php:453
-msgid "Plugin reactivated successfully. "
 msgstr ""
 
 #: includes/settings.php:63
@@ -91,30 +69,32 @@ msgctxt "settings page"
 msgid "Login Notification"
 msgstr ""
 
-#: includes/settings.php:150
+#: includes/settings.php:148
 msgctxt "settings page"
 msgid "Site Administrator Notification"
 msgstr ""
 
-#: includes/settings.php:158
+#: includes/settings.php:156
 msgctxt "settings page"
 msgid "Admin Notification"
 msgstr ""
 
-#: includes/settings.php:167
+#: includes/settings.php:165
 msgctxt "settings page"
 msgid "Exclude User Roles"
 msgstr ""
 
-#: includes/settings.php:176
+#: includes/settings.php:174
 msgctxt "settings page"
 msgid "E-mail Template"
 msgstr ""
 
-#: includes/settings.php:189
+#: includes/settings.php:190
 #, php-format
 msgctxt "settings page"
 msgid ""
-"Notification will be sent to admin e-mail address. You can change admin e-"
-"mail address in <a href=\"%s\">General Settings</a>."
+"Notification will be sent to admin e-mail address when someone logs in "
+"successfully.<br />Your admin e-mail address is <a href=\"mailto:%1$s\">"
+"%1$s</a>.<br/>You can change admin e-mail address in <a href=\"%2$s"
+"\">General Settings</a>."
 msgstr ""
