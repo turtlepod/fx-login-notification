@@ -271,7 +271,9 @@ function fx_login_nf_send_mail( $user_user_login, $user ) {
 
 		/* Headers */
 		$headers  = 'From: "' . $from_name . '" <' . $from_email . '>'. "\r\n";
-		$headers .= "Content-type: text/html; charset: " . get_bloginfo( 'charset' ) . "\r\n";
+		$headers .= "Content-Transfer-Encoding: 8bit \r\n";
+		$headers .= "Content-type: text/html \r\n";
+		$headers .= "charset: " . get_bloginfo( 'charset' ) . "\r\n";
 
 		/* E-Mail Subject */
 		$email_subject = esc_attr( fx_login_nf_get_option( 'email_subject', fx_login_nf_email_subject_default() ) );
@@ -290,4 +292,3 @@ function fx_login_nf_send_mail( $user_user_login, $user ) {
 	/* After action hook */
 	do_action( 'fx_login_nf_after_send_mail', $user_user_login, $user, $send_nf );
 }
-
